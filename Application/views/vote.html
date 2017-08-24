@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Voting Page</title>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+		<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+	</head>
+	<body>
+		<!-- Always shows a header, even in smaller screens. -->
+		<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+			<header class="mdl-layout__header">
+				<div class="mdl-layout__header-row">
+					<!-- Title -->
+					<span class="mdl-layout-title">Online Voting System - Vote</span>
+					<!-- Add spacer, to align navigation to the right -->
+					<div class="mdl-layout-spacer"></div>
+					<!-- Navigation. We hide it in small screens. -->
+					<nav class="mdl-navigation mdl-layout--large-screen-only">
+						<a class="mdl-navigation__link" href=""></a>
+					</nav>
+				</div>
+			</header>
+			<main class="mdl-layout__content">
+				<div class="page-content">
+					<!-- Icon List -->
+					<style>
+						.demo-list-icon { width: 400px; }
+					</style>
+					<ul class="demo-list-icon mdl-list">
+						<li class="mdl-list__item">
+							<h3>What is the best fruit?</h3>
+						</li>
+						<li class="mdl-list__item">
+							<span class="mdl-list__item-primary-content">Apple</span>
+							<button id="vote1" onClick="voteClicked('1')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Vote</button>
+							<button class="mdl-button mdl-js-button" id="result1" disabled></button>
+						</li>
+  						<li class="mdl-list__item">
+							<span class="mdl-list__item-primary-content">Banana</span>
+							<button id="vote2" onClick="voteClicked('2')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Vote</button>
+							<button class="mdl-button mdl-js-button" id="result2" disabled></button>
+						</li>
+						<li class="mdl-list__item">
+							<span class="mdl-list__item-primary-content">Pear</span>
+							<button id="vote3" onClick="voteClicked('3')" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Vote</button>
+							<button class="mdl-button mdl-js-button" id="result3" disabled></button>
+						</li>
+					</ul>
+				</div>
+			</main>
+		</div>
+		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
+		<script>
+			// Initialize Firebase
+			var config = {
+				apiKey: "AIzaSyA4UwT0mplgipNj5lDIS8PBxR07XYBqPtA",
+				authDomain: "webvotingsystem.firebaseapp.com",
+				databaseURL: "https://webvotingsystem.firebaseio.com",
+				projectId: "webvotingsystem",
+				storageBucket: "webvotingsystem.appspot.com",
+				messagingSenderId: "661246437678"
+  			};
+			firebase.initializeApp(config);
+			
+			var database = firebase.database();
+		</script>
+		<script>
+			var o1CountRef = firebase.database().ref('options/o1/count');
+			var o2CountRef = firebase.database().ref('options/o2/count');
+			var o3CountRef = firebase.database().ref('options/o3/count');
+			o1CountRef.on('value', snap => result1.innerText = snap.val());
+			o2CountRef.on('value', snap => result2.innerText = snap.val());
+			o3CountRef.on('value', snap => result3.innerText = snap.val());
+
+			// When any vote button is clicked
+			function voteClicked(option) {
+				$('#vote1').attr('disabled','disabled');
+				$('#vote2').attr('disabled','disabled');
+				$('#vote3').attr('disabled','disabled');
+				var ref = firebase.database().ref('options/o' + option + '/count');
+				ref.transaction(function(currentCount) {
+					return currentCount + 1;
+				});			
+
+			}
+		</script>
+	</body>
+</html>

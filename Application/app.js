@@ -60,6 +60,10 @@ router.get("/",function(req,res){
 	res.sendFile(path + "index.html");
 });
 
+router.get("/vote",function(req,res){
+	res.sendFile(path + "vote.html");
+});
+
 app.use("/",router);
 
 app.listen(3000,function(){
